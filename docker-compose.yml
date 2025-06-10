@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    restart: always
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_DATABASE: graphdb
+    volumes:
+      - mongo-data:/data/db
+
+  graph-app:
+    build: .
+    container_name: graph-app
+    restart: always
+    ports:
+      - '4000:4000'
+    environment:
+      - DB_CONNECTION=mongodb://mongo:27017/graphdb
+    depends_on:
+      - mongo
+
+volumes:
+  mongo-data:
